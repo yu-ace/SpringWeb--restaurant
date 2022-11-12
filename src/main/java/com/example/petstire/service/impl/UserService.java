@@ -10,13 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService {
-    private static IUserService userService;
-
-    private UserService(){
-    }
-    public static IUserService getInstance(){
-        return userService;
-    }
 
     @Autowired
     UserDao userDao;

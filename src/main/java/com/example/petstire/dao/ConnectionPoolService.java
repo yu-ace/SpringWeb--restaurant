@@ -1,8 +1,6 @@
-package com.example.petstire.service.impl;
+package com.example.petstire.dao;
 
-import com.example.petstire.service.IConnectionPoolService;
 import org.springframework.stereotype.Service;
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +8,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
-public class ConnectionPoolService implements IConnectionPoolService {
+public class ConnectionPoolService {
     String url = "jdbc:mysql://192.168.50.252:3306/pet";
     String user = "root";
     String password = "123456";
@@ -19,17 +17,6 @@ public class ConnectionPoolService implements IConnectionPoolService {
     int createNumber = 5;
     int maxFreeNumber = 8;
     int maxConnectionNumber = 60;
-
-
-    private static IConnectionPoolService connectionPoolService;
-
-
-    private ConnectionPoolService(){
-    }
-
-    public static IConnectionPoolService getInstance(){
-        return connectionPoolService;
-    }
 
     private List<Connection> userConnectionList = new LinkedList<>();
     private Deque<Connection> freeConnectionList = new LinkedList<>();
@@ -41,15 +28,13 @@ public class ConnectionPoolService implements IConnectionPoolService {
         return connection;
     }
 
-    public void connectionPool() throws Exception {
+    public ConnectionPoolService() throws Exception {
         Class.forName(className);
         for(int i = 0;i < createNumber;i++){
             open();
         }
     }
 
-
-    @Override
     public Connection getConnection() throws Exception {
         if(freeConnectionList == null && freeConnectionList.size() + userConnectionList.size() == maxConnectionNumber){
             throw new Exception("连接池无空余连接");
@@ -64,7 +49,6 @@ public class ConnectionPoolService implements IConnectionPoolService {
         return connection;
     }
 
-    @Override
     public void returnConnection(Connection connection) {
         userConnectionList.remove(connection);
         freeConnectionList.add(connection);
@@ -80,7 +64,7 @@ public class ConnectionPoolService implements IConnectionPoolService {
                     throw new RuntimeException(e);
                 }
             }
-
         }
     }
+
 }

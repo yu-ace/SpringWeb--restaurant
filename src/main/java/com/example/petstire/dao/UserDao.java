@@ -1,7 +1,6 @@
 package com.example.petstire.dao;
 
 import com.example.petstire.model.User;
-import com.example.petstire.service.IConnectionPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +8,8 @@ import java.sql.*;
 
 @Service
 public class UserDao {
-
     @Autowired
-    public IConnectionPoolService connectionPoolService;
+    ConnectionPoolService connectionPoolService;
 
     public void register(String name, String password) throws Exception {
             String str = "insert into user (username,password) values('%s',%d);";
@@ -44,6 +42,5 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
-
 
 }
