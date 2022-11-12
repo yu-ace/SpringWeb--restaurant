@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class User {
     String name;
-    int password;
+    String password;
 
     public String getName() {
         return name;
@@ -15,11 +15,11 @@ public class User {
         this.name = name;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 }

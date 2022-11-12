@@ -1,49 +1,49 @@
 package com.example.petstire.dao;
 
-
 import com.example.petstire.model.User;
-import com.example.petstire.service.IUserService;
+import com.example.petstire.service.IConnectionPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.sql.*;
 
-@RestController
+@Service
 public class UserDao {
 
     @Autowired
-    public IUserService userService;
+    public IConnectionPoolService connectionPoolService;
 
-    @RequestMapping(path = "/register",method = RequestMethod.POST)
-    public String register(
-            @RequestParam(name = "username")
-            String name,
-            @RequestParam(name = "password")
-            int password){
-        userService.newUser(name, password);
-        return "注册成功";
+    public void register(String name, String password) throws Exception {
+            String str = "insert into user (username,password) values('%s',%d);";
+            String sqlStr = String.format(str,name,password);
+            Connection connection = connectionPoolService.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlStr);
+            preparedStatement.execute();
+            connectionPoolService.returnConnection(connection);
     }
 
-    @RequestMapping(path = "/login",method = RequestMethod.POST)
-    public String login(
-            @RequestParam(name = "username")
-            String name,
-            @RequestParam(name = "password")
-            int password){
-        List<User> userList = userService.getUserList();
-        for(User user : userList){
-            if(user.getName().equals(name)){
-                if(user.getPassword() == password){
-                    return "登陆成功";
-                }else{
-                    return "密码错误,登陆失败";
-                }
+    public User getUser(String username) throws Exception {
+        try{
+            String str = "select * from user where username = '%s'";
+            String sqlStr = String.format(str,username);
+            Connection connection = connectionPoolService.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlStr);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next()) {
+                return null;
+            }else{
+                String name = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                User user = new User();
+                user.setName(name);
+                user.setPassword(password);
+                connectionPoolService.returnConnection(connection);
+                return user;
             }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return "用户名不存在";
     }
+
 
 }
