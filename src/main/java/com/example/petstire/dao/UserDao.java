@@ -2,17 +2,18 @@ package com.example.petstire.dao;
 
 import com.example.petstire.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
 
-@Service
+@Component
 public class UserDao {
     @Autowired
     ConnectionPool connectionPoolService;
 
     public void register(String name, String password) throws Exception {
-            String str = "insert into user (username,password) values('%s',%d);";
+            String str = "insert into user (username,password) values('%s','%s');";
             String sqlStr = String.format(str,name,password);
             Connection connection = connectionPoolService.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sqlStr);

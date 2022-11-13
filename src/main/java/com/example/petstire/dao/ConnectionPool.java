@@ -1,5 +1,7 @@
 package com.example.petstire.dao;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -7,12 +9,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
-@Service
+@Component
 public class ConnectionPool {
-    String url = "jdbc:mysql://192.168.50.252:3306/pet";
+    @Value("${connection.url}")
+    String url = "";
+    @Value("${connection.user}")
     String user = "root";
+    @Value("${connection.password}")
     String password = "123456";
-    String className = "com.mysql.cj.jdbc.Driver";
+    @Value("${connection.className}")
+    String className = "";
     int minNumber = 3;
     int createNumber = 5;
     int maxFreeNumber = 8;
@@ -29,10 +35,10 @@ public class ConnectionPool {
     }
 
     public ConnectionPool() throws Exception {
-        Class.forName(className);
-        for(int i = 0;i < createNumber;i++){
-            open();
-        }
+//        Class.forName(className);
+//        for(int i = 0;i < createNumber;i++){
+//            open();
+//        }
     }
 
     public Connection getConnection() throws Exception {
