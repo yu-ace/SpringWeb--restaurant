@@ -23,7 +23,7 @@ public class UserController {
             @RequestParam(name = "password")
             String password) throws Exception {
         userService.newUser(name, password);
-        return "注册成功";
+        return "注册成功!";
     }
 
     @RequestMapping(path = "/login",method = RequestMethod.POST)
