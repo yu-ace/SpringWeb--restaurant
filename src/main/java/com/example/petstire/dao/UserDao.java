@@ -9,7 +9,7 @@ import java.sql.*;
 @Service
 public class UserDao {
     @Autowired
-    ConnectionPoolService connectionPoolService;
+    ConnectionPool connectionPoolService;
 
     public void register(String name, String password) throws Exception {
             String str = "insert into user (username,password) values('%s',%d);";

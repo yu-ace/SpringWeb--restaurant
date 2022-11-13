@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class User {
+    int id;
     String name;
     String password;
 

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
-public class ConnectionPoolService {
+public class ConnectionPool {
     String url = "jdbc:mysql://192.168.50.252:3306/pet";
     String user = "root";
     String password = "123456";
@@ -28,7 +28,7 @@ public class ConnectionPoolService {
         return connection;
     }
 
-    public ConnectionPoolService() throws Exception {
+    public ConnectionPool() throws Exception {
         Class.forName(className);
         for(int i = 0;i < createNumber;i++){
             open();
