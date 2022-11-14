@@ -10,22 +10,22 @@ import java.sql.*;
 @Component
 public class UserDao {
     @Autowired
-    ConnectionPool connectionPoolService;
+    ConnectionPool connectionPool;
 
     public void register(String name, String password) throws Exception {
             String str = "insert into user (username,password) values('%s','%s');";
             String sqlStr = String.format(str,name,password);
-            Connection connection = connectionPoolService.getConnection();
+            Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sqlStr);
             preparedStatement.execute();
-            connectionPoolService.returnConnection(connection);
+            connectionPool.returnConnection(connection);
     }
 
     public User getUser(String username) throws Exception {
         try{
             String str = "select * from user where username = '%s'";
             String sqlStr = String.format(str,username);
-            Connection connection = connectionPoolService.getConnection();
+            Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sqlStr);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(!resultSet.next()) {
@@ -36,7 +36,7 @@ public class UserDao {
                 User user = new User();
                 user.setName(name);
                 user.setPassword(password);
-                connectionPoolService.returnConnection(connection);
+                connectionPool.returnConnection(connection);
                 return user;
             }
         }catch (SQLException e) {
